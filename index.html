@@ -12,10 +12,10 @@
       <div v-if="imgSrc" class="img_bg_camera">
         <img :src="imgSrc" class="tx_img" />
       </div>
-      <div>{{err}}</div>
-      <div>{{video_stream}}</div>
-      <div>{{mediaStreamTrack}}</div>
-      <div>{{imgSrc}}</div>
+      <div>错误：{{err}}</div>
+      <div>视频数据：{{video_stream}}</div>
+      <div>媒体数据：{{mediaStreamTrack.toString()}}</div>
+      <div>图片数据：{{imgSrc}}</div>
       <button @click="OpenCamera">打开摄像头</button>
       <button @click="CloseCamera">关闭摄像头</button>
       <button @click="setImage">拍照</button>
