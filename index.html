@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>获取前置摄像头并兼容iOS</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="./vconsole.min.js"></script>
   </head>
   <body>
     <div id="app">
@@ -21,6 +22,7 @@
       <button @click="setImage">拍照</button>
     </div>
     <script>
+      import Vconsole from "vconsole";
       new Vue({
         el: "#app",
         data() {
@@ -36,6 +38,7 @@
         },
         mounted() {
           // 进入页面 自动调用摄像头
+          new Vconsole();
           this.getCamera();
         },
         methods: {
