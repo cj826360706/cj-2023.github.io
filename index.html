@@ -13,8 +13,8 @@
         <img :src="imgSrc" class="tx_img" />
       </div>
       <div>错误：{{err}}</div>
-      <div>视频数据：{{video_stream}}</div>
-      <div>媒体数据：{{mediaStreamTrack.toString()}}</div>
+      <div>视频数据：{{JSON.stringify(video_stream) }}</div>
+      <div>媒体数据：{{JSON.stringify(mediaStreamTrack)}}</div>
       <div>图片数据：{{imgSrc}}</div>
       <button @click="OpenCamera">打开摄像头</button>
       <button @click="CloseCamera">关闭摄像头</button>
