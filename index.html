@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>获取前置摄像头并兼容iOS</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://schores.cdn.scho.com/h5-res/eruda/eruda.min.js"></script>
   </head>
   <body>
     <div id="app">
@@ -17,6 +18,7 @@
       <button @click="setImage">拍照</button>
     </div>
     <script>
+      window.eruda.init();
       new Vue({
         el: "#app",
         data() {
