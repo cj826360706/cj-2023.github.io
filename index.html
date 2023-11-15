@@ -5,6 +5,11 @@
     <title>获取前置摄像头并兼容iOS</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script src="./vconsole.min.js"></script>
+    <style>
+      #canvasCamera {
+        visibility: hidden;
+      }
+    </style>
   </head>
   <body>
     <div id="app">
@@ -13,13 +18,7 @@
       <div v-if="imgSrc" class="img_bg_camera">
         <img :src="imgSrc" class="tx_img" />
       </div>
-      <div>错误：{{err}}</div>
-      <div>视频数据：{{JSON.stringify(video_stream) }}</div>
-      <div>媒体数据：{{JSON.stringify(mediaStreamTrack)}}</div>
-      <div>图片数据：{{imgSrc}}</div>
-      <!-- <button @click="OpenCamera">打开摄像头</button>
-      <button @click="CloseCamera">关闭摄像头</button>
-      <button @click="setImage">拍照</button> -->
+      <div>延迟10s拍摄</div>
     </div>
     <script>
       new Vue({
@@ -96,11 +95,11 @@
           setImage() {
             console.log("拍照");
             // 点击canvas画图
-            this.context.drawImage(this.$refs.video, 0, 0, 200, 100);
+            this.context.drawImage(this.$refs.video, 0, 0, 400, 400);
             // 获取图片base64链接
             const image = this.cancas.toDataURL("image/png");
             this.imgSrc = image;
-            this.$emit("refreshDataList", this.imgSrc);
+            console.log(image, "base64图片路径");
           },
           // 打开摄像头
           OpenCamera() {
