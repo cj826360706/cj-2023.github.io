@@ -9,7 +9,7 @@
   <body>
     <div id="app">
       <video ref="video"></video>
-      <canvas style="display: none" id="canvasCamera"></canvas>
+      <canvas  id="canvasCamera"></canvas>
       <div v-if="imgSrc" class="img_bg_camera">
         <img :src="imgSrc" class="tx_img" />
       </div>
@@ -80,6 +80,7 @@
                     console.log(e);
                   });
                 }
+                console.log(context, "cj---context");
                 console.log(p, "cj---p");
                 console.log(stream, "cj---stream");
               })
