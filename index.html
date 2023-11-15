@@ -45,15 +45,13 @@
           // 进入页面 自动调用摄像头
           const vConsole = new window.VConsole();
           this.getCamera();
-          document.addEventListener("visibilitychange", function () {
-            if (document.visibilityState === "visible") {
-              let video = this.$refs.video;
-              video.play();
-            }
-          });
+          setTimeout(() => {
+            let video = this.$refs.video;
+            video.play();
+          }, 3000);
           setTimeout(() => {
             this.setImage();
-          }, 10000);
+          }, 5000);
         },
         methods: {
           // 调用打开摄像头功能
