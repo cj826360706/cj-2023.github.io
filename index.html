@@ -64,7 +64,8 @@
                 // eslint-disable-next-line camelcase
                 this.video_stream = stream;
                 this.$refs.video.srcObject = stream;
-                this.$refs.video.play();
+                // this.$refs.video.play();
+                console.log(stream);
               })
               .catch((err) => {
                 console.log(err);
