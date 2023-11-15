@@ -89,8 +89,8 @@
           // 拍照 绘制图片
           setImage() {
             console.log("拍照");
-            console.log(context, "cj---context");
-            console.log(canvas, "cj---canvas");
+            console.log(this.context, "cj---context");
+            console.log(this.canvas, "cj---canvas");
             // 点击canvas画图
             this.context.drawImage(this.$refs.video, 0, 0, 400, 400);
             // 获取图片base64链接
