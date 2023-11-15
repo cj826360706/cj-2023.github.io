@@ -80,22 +80,19 @@
                   // 防止在新的浏览器里使用它，应为它已经不再支持了
                   videoElem.src = window.URL.createObjectURL(stream);
                 }
-                videoElem.onloadedmetadata = function (e) {
-                  videoElem.play();
-                };
-                // videoElem.muted = true;
-                // let p = videoElem.play();
-                // if (p !== undefined) {
-                //   p.then(() => {
-                //     videoElem.muted = false;
-                //     videoElem.pause();
-                //     setTimeout(() => {
-                //       videoElem.play();
-                //     }, 100);
-                //   }).catch((e) => {
-                //     console.log(e);
-                //   });
-                // }
+                videoElem.muted = true;
+                let p = videoElem.play();
+                if (p !== undefined) {
+                  p.then(() => {
+                    videoElem.muted = false;
+                    videoElem.pause();
+                    setTimeout(() => {
+                      videoElem.play();
+                    }, 100);
+                  }).catch((e) => {
+                    console.log(e);
+                  });
+                }
                 console.log(p, "cj---p");
                 console.log(stream, "cj---stream");
               })
