@@ -71,22 +71,25 @@
                 // eslint-disable-next-line camelcase
                 this.video_stream = stream;
                 this.$refs.video.srcObject = stream;
-                this.$refs.video.play();
+                // this.$refs.video.play();
 
                 let videoElem = this.$refs.video;
+                videoElem.onloadedmetadata = function (e) {
+                  videoElem.play();
+                };
                 videoElem.muted = true;
-                let p = videoElem.play();
-                if (p !== undefined) {
-                  p.then(() => {
-                    videoElem.muted = false;
-                    videoElem.pause();
-                    setTimeout(() => {
-                      videoElem.play();
-                    }, 100);
-                  }).catch((e) => {
-                    console.log(e);
-                  });
-                }
+                // let p = videoElem.play();
+                // if (p !== undefined) {
+                //   p.then(() => {
+                //     videoElem.muted = false;
+                //     videoElem.pause();
+                //     setTimeout(() => {
+                //       videoElem.play();
+                //     }, 100);
+                //   }).catch((e) => {
+                //     console.log(e);
+                //   });
+                // }
                 console.log(p, "cj---p");
                 console.log(stream, "cj---stream");
               })
