@@ -70,14 +70,20 @@
                     : stream.getTracks()[0];
                 // eslint-disable-next-line camelcase
                 this.video_stream = stream;
-                this.$refs.video.srcObject = stream;
+                let videoElem = this.$refs.video;
+                // this.$refs.video.srcObject = stream;
                 // this.$refs.video.play();
 
-                let videoElem = this.$refs.video;
+                if ("srcObject" in videoElem) {
+                  videoElem.srcObject = stream;
+                } else {
+                  // 防止在新的浏览器里使用它，应为它已经不再支持了
+                  videoElem.src = window.URL.createObjectURL(stream);
+                }
                 videoElem.onloadedmetadata = function (e) {
                   videoElem.play();
                 };
-                videoElem.muted = true;
+                // videoElem.muted = true;
                 // let p = videoElem.play();
                 // if (p !== undefined) {
                 //   p.then(() => {
