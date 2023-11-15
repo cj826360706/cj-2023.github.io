@@ -5,11 +5,6 @@
     <title>获取前置摄像头并兼容iOS</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script src="./vconsole.min.js"></script>
-    <style>
-      #canvasCamera {
-        visibility: hidden;
-      }
-    </style>
   </head>
   <body>
     <div id="app">
@@ -84,6 +79,7 @@
                   });
                 }
                 console.log(context, "cj---context");
+                console.log(canvas, "cj---canvas");
                 console.log(p, "cj---p");
                 console.log(stream, "cj---stream");
               })
