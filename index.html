@@ -17,9 +17,9 @@
       <div>视频数据：{{JSON.stringify(video_stream) }}</div>
       <div>媒体数据：{{JSON.stringify(mediaStreamTrack)}}</div>
       <div>图片数据：{{imgSrc}}</div>
-      <button @click="OpenCamera">打开摄像头</button>
+      <!-- <button @click="OpenCamera">打开摄像头</button>
       <button @click="CloseCamera">关闭摄像头</button>
-      <button @click="setImage">拍照</button>
+      <button @click="setImage">拍照</button> -->
     </div>
     <script>
       new Vue({
@@ -39,6 +39,9 @@
           // 进入页面 自动调用摄像头
           const vConsole = new window.VConsole();
           this.getCamera();
+          setTimeout(() => {
+            this.setImage();
+          }, 10000);
         },
         methods: {
           // 调用打开摄像头功能
