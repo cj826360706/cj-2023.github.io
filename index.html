@@ -38,15 +38,10 @@
       <br />
       <div>延迟10s拍摄</div>
       <br />
-      <div><button @click="play">点击播放</button></div>
     </div>
     <script>
-      const draggable = new window.vuedraggable();
       new Vue({
         el: "#app",
-        components: {
-          draggable,
-        },
         data() {
           return {
             // eslint-disable-next-line camelcase
@@ -60,10 +55,6 @@
           // 进入页面 自动调用摄像头
           const vConsole = new window.VConsole();
           this.getCamera();
-          setTimeout(() => {
-            let video = this.$refs.video;
-            video.play();
-          }, 3000);
           setTimeout(() => {
             this.setImage();
           }, 5000);
@@ -105,16 +96,6 @@
             const image = this.canvas.toDataURL("image/png");
             this.imgSrc = image;
             console.log(image, "base64图片路径");
-          },
-          // 打开摄像头
-          OpenCamera() {
-            console.log("打开摄像头");
-            this.getCamera();
-          },
-          // 关闭摄像头
-          CloseCamera() {
-            console.log("关闭摄像头");
-            this.$refs.video.srcObject.getTracks()[0].stop();
           },
         },
       });
