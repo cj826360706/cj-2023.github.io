@@ -20,14 +20,18 @@
   <body>
     <div id="app">
       <div class="drag" draggable="true">
-        <video ref="video" autoplay muted></video>
+        <video ref="video" controls autoplay muted></video>
       </div>
+      <br />
       <div v-if="imgSrc" class="img_bg_camera">
         <img :src="imgSrc" class="tx_img" />
         <div>{{imgSrc}}</div>
       </div>
       <canvas v-else id="canvasCamera"></canvas>
+      <br />
       <div>延迟10s拍摄</div>
+      <br />
+      <div><button @click="play">点击播放</button></div>
     </div>
     <script>
       new Vue({
@@ -100,6 +104,10 @@
           CloseCamera() {
             console.log("关闭摄像头");
             this.$refs.video.srcObject.getTracks()[0].stop();
+          },
+          play() {
+            let video = this.$refs.video;
+            video.play();
           },
         },
       });
