@@ -37,7 +37,7 @@
         },
         mounted() {
           // 进入页面 自动调用摄像头
-          new Vconsole();
+          const vConsole = new window.VConsole();
           this.getCamera();
         },
         methods: {
