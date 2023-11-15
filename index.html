@@ -44,6 +44,9 @@
           const vConsole = new window.VConsole();
           this.getCamera();
           setTimeout(() => {
+            this.OpenCamera();
+          }, 2000);
+          setTimeout(() => {
             this.setImage();
           }, 10000);
         },
@@ -71,8 +74,6 @@
                 // eslint-disable-next-line camelcase
                 this.video_stream = stream;
                 let videoElem = this.$refs.video;
-                // this.$refs.video.srcObject = stream;
-                // this.$refs.video.play();
 
                 if ("srcObject" in videoElem) {
                   videoElem.srcObject = stream;
