@@ -65,6 +65,21 @@
                 this.video_stream = stream;
                 this.$refs.video.srcObject = stream;
                 // this.$refs.video.play();
+
+                let videoElem = this.$refs.video;
+                videoElem.muted = true;
+                let p = videoElem.play();
+                if (p !== undefined) {
+                  p.then(() => {
+                    videoElem.muted = false;
+                    videoElem.pause();
+                    setTimeout(() => {
+                      videoElem.play();
+                    }, 100);
+                  }).catch((e) => {
+                    console.log(e);
+                  });
+                }
                 console.log(stream);
               })
               .catch((err) => {
