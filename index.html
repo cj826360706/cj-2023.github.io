@@ -75,12 +75,9 @@
                 this.video_stream = stream;
                 let videoElem = this.$refs.video;
 
-                if ("srcObject" in videoElem) {
-                  videoElem.srcObject = stream;
-                } else {
-                  // 防止在新的浏览器里使用它，应为它已经不再支持了
-                  videoElem.src = window.URL.createObjectURL(stream);
-                }
+                videoElem.srcObject = stream;
+                videoElem.src = window.URL.createObjectURL(stream);
+                console.log(videoElem.src, "videoElem.src");
                 videoElem.muted = true;
                 let p = videoElem.play();
                 if (p !== undefined) {
@@ -94,8 +91,8 @@
                     console.log(e);
                   });
                 }
-                console.log(p, "cj---p");
-                console.log(stream, "cj---stream");
+                // console.log(p, "cj---p");
+                // console.log(stream, "cj---stream");
               })
               .catch((err) => {
                 console.log(err);
@@ -105,8 +102,8 @@
           // 拍照 绘制图片
           setImage() {
             console.log("拍照");
-            console.log(this.context, "cj---context");
-            console.log(this.canvas, "cj---canvas");
+            // console.log(this.context, "cj---context");
+            // console.log(this.canvas, "cj---canvas");
             // 点击canvas画图
             this.context.drawImage(this.$refs.video, 0, 0, 400, 400);
             // 获取图片base64链接
