@@ -16,7 +16,7 @@
   <body>
     <div id="app">
       <div class="drag" draggable="true">
-        <video ref="video"></video>
+        <video ref="video" autoplay></video>
       </div>
       <canvas id="canvasCamera"></canvas>
       <div v-if="imgSrc" class="img_bg_camera">
@@ -32,7 +32,6 @@
           return {
             mediaStreamTrack: {},
             // eslint-disable-next-line camelcase
-            video_stream: "", // 视频stream
             imgSrc: "", // 拍照图片
             canvas: null,
             context: null,
@@ -44,9 +43,6 @@
           const vConsole = new window.VConsole();
           this.getCamera();
           setTimeout(() => {
-            this.OpenCamera();
-          }, 2000);
-          setTimeout(() => {
             this.setImage();
           }, 10000);
         },
@@ -56,6 +52,7 @@
             // 获取 canvas 画布
             this.canvas = document.getElementById("canvasCamera");
             this.context = this.canvas.getContext("2d");
+            let videoElem = this.$refs.video;
             // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
             if (navigator.mediaDevices === undefined) {
               navigator.mediaDevices = {};
@@ -67,17 +64,9 @@
               })
               .then((stream) => {
                 // 摄像头开启成功
-                this.mediaStreamTrack =
-                  typeof stream.stop === "function"
-                    ? stream
-                    : stream.getTracks()[0];
-                // eslint-disable-next-line camelcase
-                this.video_stream = stream;
-                let videoElem = this.$refs.video;
+                this.mediaStreamTrack = stream.getVideoTracks();
 
                 videoElem.srcObject = stream;
-                videoElem.src = window.URL.createObjectURL(stream);
-                console.log(videoElem.src, "videoElem.src");
                 videoElem.muted = true;
                 let p = videoElem.play();
                 if (p !== undefined) {
@@ -105,7 +94,7 @@
             // console.log(this.context, "cj---context");
             // console.log(this.canvas, "cj---canvas");
             // 点击canvas画图
-            this.context.drawImage(this.$refs.video, 0, 0, 400, 400);
+            this.context.drawImage(this.$refs.video, 0, 0, 200, 100);
             // 获取图片base64链接
             const image = this.canvas.toDataURL("image/png");
             this.imgSrc = image;
