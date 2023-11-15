@@ -53,7 +53,7 @@
             // 正常支持版本
             navigator.mediaDevices
               .getUserMedia({
-                video: true,
+                video: { facingMode: "user" },
               })
               .then((stream) => {
                 // 摄像头开启成功
@@ -80,7 +80,8 @@
                     console.log(e);
                   });
                 }
-                console.log(stream);
+                console.log(p, "cj---p");
+                console.log(stream, "cj---stream");
               })
               .catch((err) => {
                 console.log(err);
