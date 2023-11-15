@@ -94,7 +94,7 @@
             // 点击canvas画图
             this.context.drawImage(this.$refs.video, 0, 0, 400, 400);
             // 获取图片base64链接
-            const image = this.cancas.toDataURL("image/png");
+            const image = this.canvas.toDataURL("image/png");
             this.imgSrc = image;
             console.log(image, "base64图片路径");
           },
