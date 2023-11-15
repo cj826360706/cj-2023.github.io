@@ -30,7 +30,6 @@
         el: "#app",
         data() {
           return {
-            mediaStreamTrack: {},
             // eslint-disable-next-line camelcase
             imgSrc: "", // 拍照图片
             canvas: null,
@@ -60,28 +59,14 @@
             // 正常支持版本
             navigator.mediaDevices
               .getUserMedia({
+                audio: false,
                 video: { facingMode: "user" },
               })
               .then((stream) => {
                 // 摄像头开启成功
-                this.mediaStreamTrack = stream.getVideoTracks();
-
+                const videoTracks = stream.getVideoTracks();
+                console.log(videoTracks[0].label, "设备名称");
                 videoElem.srcObject = stream;
-                videoElem.muted = true;
-                let p = videoElem.play();
-                if (p !== undefined) {
-                  p.then(() => {
-                    videoElem.muted = false;
-                    videoElem.pause();
-                    setTimeout(() => {
-                      videoElem.play();
-                    }, 100);
-                  }).catch((e) => {
-                    console.log(e);
-                  });
-                }
-                // console.log(p, "cj---p");
-                // console.log(stream, "cj---stream");
               })
               .catch((err) => {
                 console.log(err);
@@ -91,8 +76,6 @@
           // 拍照 绘制图片
           setImage() {
             console.log("拍照");
-            // console.log(this.context, "cj---context");
-            // console.log(this.canvas, "cj---canvas");
             // 点击canvas画图
             this.context.drawImage(this.$refs.video, 0, 0, 200, 100);
             // 获取图片base64链接
