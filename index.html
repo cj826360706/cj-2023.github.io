@@ -20,7 +20,14 @@
   <body>
     <div id="app">
       <div class="drag" draggable="true">
-        <video ref="video" autoplay muted></video>
+        <video
+          ref="video"
+          autoplay
+          muted
+          webkit-playsinline
+          playsinline
+          x5-video-player-type="h5-page"
+        ></video>
       </div>
       <br />
       <div v-if="imgSrc" class="img_bg_camera">
