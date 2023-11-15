@@ -18,11 +18,11 @@
       <div class="drag" draggable="true">
         <video ref="video" autoplay></video>
       </div>
-      <canvas id="canvasCamera"></canvas>
       <div v-if="imgSrc" class="img_bg_camera">
         <img :src="imgSrc" class="tx_img" />
         <div>{{imgSrc}}</div>
       </div>
+      <canvas v-else id="canvasCamera"></canvas>
       <div>延迟10s拍摄</div>
     </div>
     <script>
