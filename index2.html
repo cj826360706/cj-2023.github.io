@@ -10,17 +10,28 @@
         width: 300px;
         height: 300px;
         border: 1px solid black;
+        position: absolute;
+        top: 0;
+        left: 0;
       }
-      .drag > video {
+      video {
         width: 300px;
         height: 300px;
+        border: 1px solid red;
       }
     </style>
   </head>
   <body>
     <div id="app">
-      <div class="drag" draggable="true">
+      <div
+        ref="drag"
+        class="drag"
+        @pointerdown="() => isPointerDown = true"
+        @pointerup="handlePointerup"
+        @pointermove="handlePointermove"
+      >
         <video
+          id="videos"
           ref="video"
           autoplay
           muted
@@ -49,6 +60,8 @@
             canvas: null,
             context: null,
             err: "",
+
+            isPointerDown: false,
           };
         },
         mounted() {
@@ -96,6 +109,58 @@
             const image = this.canvas.toDataURL("image/png");
             this.imgSrc = image;
             console.log(image, "base64图片路径");
+          },
+          // 返回对应尺寸配置
+          setPointerCapture(e) {
+            let drag = this.$refs.drag;
+            drag.setPointerCapture(e.pointerId);
+            const left = drag.getBoundingClientRect().left;
+            const top = drag.getBoundingClientRect().top;
+            let newLeft = e.clientX - left;
+            let newTop = e.clientY - top;
+            let targetLeft = newLeft + left - drag.clientWidth / 2 + "px";
+            let targetTop = newTop + top - drag.clientHeight / 2 + "px";
+            return {
+              drag,
+              left,
+              top,
+              newLeft,
+              newTop,
+              targetLeft,
+              targetTop,
+            };
+          },
+          handlePointermove(e) {
+            if (this.isPointerDown) {
+              const { drag, targetLeft, targetTop } = this.setPointerCapture(e);
+              drag.style.left = targetLeft;
+              drag.style.top = targetTop;
+            }
+          },
+          handlePointerup(e) {
+            let { drag, targetLeft, targetTop } = this.setPointerCapture(e);
+            // 文档宽高
+            let windowW = e.view.innerWidth;
+            let windowH = e.view.innerHeight;
+            // 触发吸附距离
+            let adsorbW = windowW - e.target.offsetWidth;
+            let adsorbH = windowH - e.target.offsetHeight;
+
+            if (parseInt(targetLeft) > adsorbW / 2) {
+              targetLeft = adsorbW - 30 + "px";
+            } else if (parseInt(targetLeft) < adsorbW / 2) {
+              targetLeft = 30 + "px";
+            }
+
+            if (parseInt(targetTop) > adsorbH / 2) {
+              targetTop = adsorbH - 30 + "px";
+            } else if (parseInt(targetTop) < adsorbH / 2) {
+              targetTop = 30 + "px";
+            }
+
+            drag.style.left = targetLeft;
+            drag.style.top = targetTop;
+            this.isPointerDown = false;
           },
         },
       });
