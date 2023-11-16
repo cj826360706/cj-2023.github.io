@@ -10,17 +10,28 @@
         width: 300px;
         height: 300px;
         border: 1px solid black;
+        position: absolute;
+        top: 0;
+        left: 0;
       }
-      .drag > video {
+      video {
         width: 300px;
         height: 300px;
+        border: 1px solid red;
       }
     </style>
   </head>
   <body>
     <div id="app">
-      <div class="drag" draggable="true">
+      <div
+        ref="drag"
+        class="drag"
+        @pointerdown="() => isPointerDown = true"
+        @pointermove="handlePointermove"
+        @pointerup="() => isPointerDown = false"
+      >
         <video
+          id="videos"
           ref="video"
           autoplay
           muted
@@ -49,6 +60,8 @@
             canvas: null,
             context: null,
             err: "",
+
+            isPointerDown: false,
           };
         },
         mounted() {
@@ -96,6 +109,19 @@
             const image = this.canvas.toDataURL("image/png");
             this.imgSrc = image;
             console.log(image, "base64图片路径");
+          },
+
+          handlePointermove(e) {
+            let drag = this.$refs.drag;
+            drag.setPointerCapture(e.pointerId);
+            if (this.isPointerDown) {
+              const left = drag.getBoundingClientRect().left;
+              const top = drag.getBoundingClientRect().top;
+              let newLeft = e.clientX - left;
+              let newTop = e.clientY - top;
+              drag.style.left = newLeft + left - drag.clientWidth / 2 + "px";
+              drag.style.top = newTop + top - drag.clientHeight / 2 + "px";
+            }
           },
         },
       });
