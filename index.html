@@ -26,9 +26,9 @@
       <div
         ref="drag"
         class="drag"
-        @pointerdown="() => isPointerDown = true"
-        @pointerup="handlePointerup"
-        @pointermove="handlePointermove"
+        @pointerdown.prevent="() => isPointerDown = true"
+        @pointerup.prevent="handlePointerup"
+        @pointermove.prevent="handlePointermove"
       >
         <video
           id="videos"

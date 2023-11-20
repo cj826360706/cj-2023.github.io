@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>h5以及pc端的拖拽</title>
+    <script src="./vue.js"></script>
+    <script src="./vconsole.min.js"></script>
+    <style>
+      #root {
+        width: 100vh;
+        height: 100vh;
+      }
+      .box {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div
+        class="box"
+        ref="box"
+        @touchstart="handleTouchstart"
+        @mousedown="handleMouseDown"
+        @mouseup="removeEvent"
+        @touchend="removeEvent"
+      >
+        <slot name="default"></slot>
+      </div>
+    </div>
+    <script>
+      new Vue({
+        el: "#root",
+        data() {
+          return {
+            content: "我是拖拽盒子的内容",
+          };
+        },
+        mounted() {},
+        methods: {
+          addEvent(document, evenName, callback) {
+            // 兼容pc以及移动端
+            document.addEventListener(evenName, callback);
+            document.addEventListener(evenName, callback);
+          },
+          removeEvent() {
+            // 兼容pc以及移动端
+            document.documentElement.removeEventListener(
+              "mousemove",
+              this.moveIng
+            );
+            document.documentElement.removeEventListener(
+              "touchmove",
+              this.moveIng
+            );
+          },
+
+          moveIng(e) {
+            const boxRef = this.$refs.box;
+            const boxRefW = boxRef.offsetWidth;
+            const boxRefH = boxRef.offsetHeight;
+            let mouseX;
+            let mouseY;
+            if (e.x !== undefined) {
+              mouseX = e.x - boxRefW / 2;
+              mouseY = e.y - boxRefH / 2;
+            } else {
+              const targetTouch = e.targetTouches[0];
+              mouseX = targetTouch.clientX - boxRefW / 2;
+              mouseY = targetTouch.clientY - boxRefH / 2;
+            }
+            boxRef.style.cssText = `transform:translate(${mouseX}px,${mouseY}px)`;
+          },
+
+          handleTouchstart() {
+            this.addEvent(document.documentElement, "mousemove", this.moveIng);
+            this.addEvent(document.documentElement, "touchmove", this.moveIng);
+          },
+          handleMouseDown() {
+            this.addEvent(document.documentElement, "mousemove", this.moveIng);
+            this.addEvent(document.documentElement, "touchmove", this.moveIng);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
