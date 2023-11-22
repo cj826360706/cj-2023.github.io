@@ -45,7 +45,6 @@
           addEvent(document, evenName, callback) {
             // 兼容pc以及移动端
             document.addEventListener(evenName, callback);
-            document.addEventListener(evenName, callback);
           },
           removeEvent() {
             // 兼容pc以及移动端
@@ -77,12 +76,10 @@
           },
 
           handleTouchstart() {
-            this.addEvent(document.documentElement, "mousemove", this.moveIng);
             this.addEvent(document.documentElement, "touchmove", this.moveIng);
           },
           handleMouseDown() {
             this.addEvent(document.documentElement, "mousemove", this.moveIng);
-            this.addEvent(document.documentElement, "touchmove", this.moveIng);
           },
         },
       });
