@@ -1,85 +1,166 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>h5以及pc端的拖拽</title>
-    <script src="./vue.js"></script>
+    <title>获取前置摄像头并兼容iOS</title>
+    <script src="vue.js"></script>
     <script src="./vconsole.min.js"></script>
     <style>
-      #root {
-        width: 100vh;
-        height: 100vh;
-      }
-      .box {
-        position: absolute;
-        width: 200px;
-        height: 200px;
+      .drag {
+        width: 300px;
+        height: 300px;
         border: 1px solid black;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      video {
+        width: 300px;
+        height: 300px;
+        border: 1px solid red;
       }
     </style>
   </head>
   <body>
-    <div id="root">
+    <div id="app">
       <div
-        class="box"
-        ref="box"
-        @touchstart="handleTouchstart"
-        @mousedown="handleMouseDown"
-        @mouseup="removeEvent"
-        @touchend="removeEvent"
+        ref="drag"
+        class="drag"
+        @pointerdown="() => isPointerDown = true"
+        @pointerup="handlePointerup"
+        @pointermove="handlePointermove"
       >
-        <slot name="default"></slot>
+        <video
+          id="videos"
+          ref="video"
+          autoplay
+          muted
+          webkit-playsinline
+          playsinline
+          x5-video-player-type="h5-page"
+        ></video>
       </div>
+      <br />
+      <div v-if="imgSrc" class="img_bg_camera">
+        <img :src="imgSrc" class="tx_img" />
+        <div>{{imgSrc}}</div>
+      </div>
+      <canvas v-else id="canvasCamera"></canvas>
+      <br />
+      <div>延迟10s拍摄</div>
+      <br />
     </div>
     <script>
       new Vue({
-        el: "#root",
+        el: "#app",
         data() {
           return {
-            content: "我是拖拽盒子的内容",
+            // eslint-disable-next-line camelcase
+            imgSrc: "", // 拍照图片
+            canvas: null,
+            context: null,
+            err: "",
+
+            isPointerDown: false,
           };
         },
-        mounted() {},
+        mounted() {
+          // 进入页面 自动调用摄像头
+          const vConsole = new window.VConsole();
+          this.getCamera();
+          setTimeout(() => {
+            this.setImage();
+          }, 5000);
+        },
         methods: {
-          addEvent(document, evenName, callback) {
-            // 兼容pc以及移动端
-            document.addEventListener(evenName, callback);
-          },
-          removeEvent() {
-            // 兼容pc以及移动端
-            document.documentElement.removeEventListener(
-              "mousemove",
-              this.moveIng
-            );
-            document.documentElement.removeEventListener(
-              "touchmove",
-              this.moveIng
-            );
-          },
-
-          moveIng(e) {
-            const boxRef = this.$refs.box;
-            const boxRefW = boxRef.offsetWidth;
-            const boxRefH = boxRef.offsetHeight;
-            let mouseX;
-            let mouseY;
-            if (e.x !== undefined) {
-              mouseX = e.x - boxRefW / 2;
-              mouseY = e.y - boxRefH / 2;
-            } else {
-              const targetTouch = e.targetTouches[0];
-              mouseX = targetTouch.clientX - boxRefW / 2;
-              mouseY = targetTouch.clientY - boxRefH / 2;
+          // 调用打开摄像头功能
+          getCamera() {
+            // 获取 canvas 画布
+            this.canvas = document.getElementById("canvasCamera");
+            this.context = this.canvas.getContext("2d");
+            let videoElem = this.$refs.video;
+            // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
+            if (navigator.mediaDevices === undefined) {
+              navigator.mediaDevices = {};
             }
-            boxRef.style.cssText = `transform:translate(${mouseX}px,${mouseY}px)`;
+            // 正常支持版本
+            navigator.mediaDevices
+              .getUserMedia({
+                audio: false,
+                video: { facingMode: "user" },
+              })
+              .then((stream) => {
+                // 摄像头开启成功
+                const videoTracks = stream.getVideoTracks();
+                console.log(videoTracks[0].label, "设备名称");
+                videoElem.srcObject = stream;
+              })
+              .catch((err) => {
+                console.log(err);
+                this.err = err;
+              });
           },
+          // 拍照 绘制图片
+          setImage() {
+            console.log("拍照");
+            // 点击canvas画图
+            this.context.drawImage(this.$refs.video, 0, 0, 200, 100);
+            // 获取图片base64链接
+            const image = this.canvas.toDataURL("image/png");
+            this.imgSrc = image;
+            console.log(image, "base64图片路径");
+          },
+          // 返回对应尺寸配置
+          setPointerCapture(e) {
+            let drag = this.$refs.drag;
+            drag.setPointerCapture(e.pointerId);
+            const left = drag.getBoundingClientRect().left;
+            const top = drag.getBoundingClientRect().top;
+            let newLeft = e.clientX - left;
+            let newTop = e.clientY - top;
+            let targetLeft = newLeft + left - drag.clientWidth / 2 + "px";
+            let targetTop = newTop + top - drag.clientHeight / 2 + "px";
+            return {
+              drag,
+              left,
+              top,
+              newLeft,
+              newTop,
+              targetLeft,
+              targetTop,
+            };
+          },
+          handlePointermove(e) {
+            if (this.isPointerDown) {
+              const { drag, targetLeft, targetTop } = this.setPointerCapture(e);
+              drag.style.left = targetLeft;
+              drag.style.top = targetTop;
+            }
+          },
+          handlePointerup(e) {
+            let { drag, targetLeft, targetTop } = this.setPointerCapture(e);
+            // 文档宽高
+            let windowW = e.view.innerWidth;
+            let windowH = e.view.innerHeight;
+            // 触发吸附距离
+            let adsorbW = windowW - e.target.offsetWidth;
+            let adsorbH = windowH - e.target.offsetHeight;
 
-          handleTouchstart() {
-            this.addEvent(document.documentElement, "touchmove", this.moveIng);
-          },
-          handleMouseDown() {
-            this.addEvent(document.documentElement, "mousemove", this.moveIng);
+            if (parseInt(targetLeft) > adsorbW / 2) {
+              targetLeft = adsorbW - 30 + "px";
+            } else if (parseInt(targetLeft) < adsorbW / 2) {
+              targetLeft = 30 + "px";
+            }
+
+            if (parseInt(targetTop) > adsorbH / 2) {
+              targetTop = adsorbH - 30 + "px";
+            } else if (parseInt(targetTop) < adsorbH / 2) {
+              targetTop = 30 + "px";
+            }
+
+            drag.style.left = targetLeft;
+            drag.style.top = targetTop;
+            this.isPointerDown = false;
           },
         },
       });
